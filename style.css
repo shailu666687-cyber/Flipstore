@@ -1,0 +1,42 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+* {
+    font-family: 'Inter', sans-serif;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body { overscroll-behavior-y: none; }
+
+/* Hide Scrollbars but keep functionality */
+::-webkit-scrollbar { display: none; }
+
+/* Glassmorphism utility */
+.glass {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+/* Bottom Nav Safe Area for modern phones */
+.pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); }
+
+/* Custom Product Card Hover/Active Effects */
+.product-card { transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.2s; }
+.product-card:active { transform: scale(0.97); }
+
+/* Premium Toast Animations */
+.toast-enter { animation: toastSlideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
+.toast-exit { animation: toastFadeOut 0.3s ease-in forwards; }
+
+@keyframes toastSlideIn {
+    from { transform: translateY(-100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+@keyframes toastFadeOut {
+    from { transform: translateY(0); opacity: 1; }
+    to { transform: translateY(-20px); opacity: 0; }
+}
+
+/* Bottom Sheet Animation logic via utility classes in JS */
+.sheet-open { transform: translateY(0) !important; }
+
