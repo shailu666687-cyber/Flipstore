@@ -1,12 +1,23 @@
 const Views = {
-    renderHome: () => {
+        renderHome: () => {
         let html = `<div class="home-page" style="padding: 10px;">
                         <img src="https://via.placeholder.com/600x200/2874f0/ffffff?text=Big+Billion+Sale" alt="Sale" style="width:100%; border-radius:8px; margin-bottom:15px;">
                         <h2 style="margin-bottom: 15px;">Trending Offers</h2>
                         <div class="product-grid">`;
-        PRODUCTS.forEach(p => html += Components.renderProductCard(p));
-        return html += `</div></div>`;
+        
+        // Product card rendering safe loop
+        if (typeof PRODUCTS !== 'undefined' && PRODUCTS.length > 0) {
+            PRODUCTS.forEach(product => {
+                html += Components.renderProductCard(product);
+            });
+        } else {
+            html += `<p style="text-align:center; width: 100%;">Products loading error...</p>`;
+        }
+        
+        html += `</div></div>`;
+        return html;
     },
+
     // views.js mein ye naye views add karein:
 
     // =========================================
