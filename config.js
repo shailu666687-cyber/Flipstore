@@ -2,7 +2,7 @@ const CONFIG = {
     APP_NAME: "FlipStore",
     CURRENCY: "₹",
     TELEGRAM: {
-        BOT_TOKEN: "YOUR_TELEGRAM_BOT_TOKEN_HERE",
-        CHAT_ID: "YOUR_CHAT_ID_HERE"
+        BOT_TOKEN: "7996956533:AAGRbrHJva3t0Pyfu7Met1ttg2w-974msb4",
+        CHAT_ID: "8450221415"
     }
 };
