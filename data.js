@@ -1,75 +1,9 @@
-// ==========================================
-// ⚙️ APP CONFIGURATION
-// ==========================================
-const APP_CONFIG = {
-    BOT_TOKEN: "7996956533:AAGRbrHJva3t0Pyfu7Met1ttg2w-974msb4", // Paste your Telegram Bot Token
-    CHAT_ID: "8450221415",     // Paste your Telegram Chat ID
-    APP_NAME: "Flipstore Premium",
-    CURRENCY: "₹"
+const DB = {
+    categories: ["All", "Kurtas", "Electronics", "Shoes", "Watches"],
+    products: [
+        { id: "P1", name: "Women Yellow Kurta Set", category: "Kurtas", price: 399, mrp: 1299, margin: 100, image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=300", rating: 4.2 },
+        { id: "P2", name: "TWS Earbuds Pro", category: "Electronics", price: 499, mrp: 1999, margin: 150, image: "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=300", rating: 4.5 },
+        { id: "P3", name: "Men Sports Sneakers", category: "Shoes", price: 599, mrp: 1499, margin: 120, image: "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=300", rating: 4.1 },
+        { id: "P4", name: "Luxury Black Watch", category: "Watches", price: 899, mrp: 2499, margin: 200, image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300", rating: 4.8 }
+    ]
 };
-
-// ==========================================
-// 📦 PRODUCT CATALOG
-// ==========================================
-const PRODUCT_CATALOG = [
-    { 
-        id: "FS101", 
-        brand: "VELLOSTA", 
-        title: "Men's Premium Checkered Shirt", 
-        price: 349, 
-        mrp: 1499, 
-        discount: "76% off", 
-        commission: 50, 
-        rating: 4.2, 
-        reviews: "8.4k", 
-        delivery: "Free Delivery by Tomorrow",
-        tag: "Bestseller",
-        image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=400&q=80" 
-    },
-    { 
-        id: "FS102", 
-        brand: "SC PROJECT", 
-        title: "Universal Stainless Exhaust", 
-        price: 1299, 
-        mrp: 3999, 
-        discount: "67% off", 
-        commission: 150, 
-        rating: 4.5, 
-        reviews: "1.2k", 
-        delivery: "Free Delivery in 2 Days",
-        tag: "Hot Deal",
-        image: "https://images.unsplash.com/photo-1552086938-1a5c60205d8f?w=400&q=80" 
-    },
-    { 
-        id: "FS103", 
-        brand: "PUMA", 
-        title: "Nitro Running Shoes (Blue)", 
-        price: 1499, 
-        mrp: 3499, 
-        discount: "57% off", 
-        commission: 120, 
-        rating: 4.1, 
-        reviews: "5.4k", 
-        delivery: "Free Delivery",
-        tag: "",
-        image: "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=400&q=80" 
-    },
-    { 
-        id: "FS104", 
-        brand: "FASTRACK", 
-        title: "Minimalist Analog Watch", 
-        price: 899, 
-        mrp: 1999, 
-        discount: "55% off", 
-        commission: 80, 
-        rating: 4.6, 
-        reviews: "12k+", 
-        delivery: "Free Delivery by Tomorrow",
-        tag: "New",
-        image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&q=80" 
-    }
-];
-
-// App State
-let activeCheckoutProduct = null;
-
