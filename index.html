@@ -2,24 +2,80 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ShopStore | Reseller Hub</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Reseller App</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body class="bg-[#f1f3f6] text-gray-800 antialiased overflow-x-hidden">
-    <div id="app-root" class="min-h-screen pb-20"></div>
-    <div id="toast-root" class="fixed top-4 left-1/2 -translate-x-1/2 z-[100] w-11/12 max-w-sm flex flex-col gap-2"></div>
+<body>
 
-    <script src="config.js"></script>
-    <script src="data.js"></script>
-    <script src="store.js"></script>
-    <script src="utils.js"></script>
-    <script src="api.js"></script>
-    <script src="components.js"></script>
-    <script src="views.js"></script>
-    <script src="router.js"></script>
-    <script src="main.js"></script>
+    <div class="app-container">
+        
+        <header class="top-header">
+            <div class="header-title">All Categories</div>
+            <div class="header-icons">
+                <i class="fas fa-search"></i>
+                <i class="fas fa-camera"></i>
+                <div class="cart-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="badge">17</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="main-layout">
+            
+            <aside class="sidebar">
+                <div class="side-item"><i class="fas fa-gift"></i><span>For You</span></div>
+                <div class="side-item"><i class="fas fa-shopping-basket"></i><span>Grocery</span></div>
+                <div class="side-item active"><i class="fas fa-tshirt"></i><span>Fashion</span></div>
+                <div class="side-item"><i class="fas fa-tv"></i><span>Appliances</span></div>
+                <div class="side-item"><i class="fas fa-mobile-alt"></i><span>Mobiles</span></div>
+            </aside>
+
+            <main class="content-area">
+                <div class="section-title">Men's Footwear & Accessories</div>
+                <div class="product-grid">
+                    <div class="product-card">
+                        <img src="https://via.placeholder.com/80" alt="Shoes">
+                        <p>Sports Shoes</p>
+                    </div>
+                    <div class="product-card">
+                        <img src="https://via.placeholder.com/80" alt="Shoes">
+                        <p>Casual Shoes</p>
+                    </div>
+                    </div>
+            </main>
+
+        </div>
+
+        <nav class="bottom-nav">
+            <div class="nav-item">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-play-circle"></i>
+                <span>Play</span>
+            </div>
+            <div class="nav-item active">
+                <i class="fas fa-th-large"></i>
+                <span>Categories</span>
+            </div>
+            <div class="nav-item">
+                <i class="fas fa-user"></i>
+                <span>Account</span>
+            </div>
+            <div class="nav-item">
+                <div class="cart-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="badge">17</span>
+                </div>
+                <span>Cart</span>
+            </div>
+        </nav>
+
+    </div>
+
 </body>
 </html>
