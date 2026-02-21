@@ -1,9 +1,26 @@
-const DB = {
-    categories: ["All", "Kurtas", "Electronics", "Shoes", "Watches"],
-    products: [
-        { id: "P1", name: "Women Yellow Kurta Set", category: "Kurtas", price: 399, mrp: 1299, margin: 100, image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=300", rating: 4.2 },
-        { id: "P2", name: "TWS Earbuds Pro", category: "Electronics", price: 499, mrp: 1999, margin: 150, image: "https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=300", rating: 4.5 },
-        { id: "P3", name: "Men Sports Sneakers", category: "Shoes", price: 599, mrp: 1499, margin: 120, image: "https://images.unsplash.com/photo-1608231387042-66d1773070a5?w=300", rating: 4.1 },
-        { id: "P4", name: "Luxury Black Watch", category: "Watches", price: 899, mrp: 2499, margin: 200, image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300", rating: 4.8 }
-    ]
-};
+const PRODUCTS = [
+    {
+        id: "p1",
+        name: "Men's Solid Black T-Shirt",
+        image: "https://via.placeholder.com/300x400/2874f0/ffffff?text=T-Shirt",
+        price: 499,
+        originalPrice: 999,
+        discount: 50,
+        rating: 4.3,
+        reviews: 1240,
+        requireSize: true,
+        sizes: ["S", "M", "L", "XL", "XXL"],
+        stock: { S: 5, M: 0, L: 12, XL: 2, XXL: 8 } // M is Out of Stock
+    },
+    {
+        id: "p2",
+        name: "Wireless Bluetooth Earbuds PRO",
+        image: "https://via.placeholder.com/300x400/ff9f00/ffffff?text=Earbuds",
+        price: 1299,
+        originalPrice: 2999,
+        discount: 56,
+        rating: 4.5,
+        reviews: 342,
+        requireSize: false
+    }
+];
