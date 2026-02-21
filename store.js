@@ -1,30 +1,51 @@
 const Store = {
-    get: (key, fallback) => JSON.parse(localStorage.getItem(`shopsy_${key}`)) || fallback,
-    set: (key, data) => localStorage.setItem(`shopsy_${key}`, JSON.stringify(data)),
+    // --- CART SYSTEM ---
+    getCart: () => JSON.parse(localStorage.getItem('flipstore_cart')) || [],
     
-    getCart: () => Store.get('cart', []),
-    addToCart: (product) => {
+    saveCart: (cart) => {
+        localStorage.setItem('flipstore_cart', JSON.stringify(cart));
+        Store.updateCartBadge();
+    },
+
+    addToCart: (product, size = null) => {
         let cart = Store.getCart();
-        if(!cart.find(item => item.id === product.id)) {
-            cart.push(product);
-            Store.set('cart', cart);
-            return true;
+        // Check if same product with same size already exists
+        let existingItem = cart.find(item => item.id === product.id && item.size === size);
+        
+        if (existingItem) {
+            existingItem.quantity += 1;
+        } else {
+            cart.push({ ...product, size, quantity: 1 });
         }
-        return false;
+        
+        Store.saveCart(cart);
+        Utils.showToast("Item added to cart", "success");
     },
-    removeFromCart: (id) => {
-        let cart = Store.getCart().filter(i => i.id !== id);
-        Store.set('cart', cart);
-    },
-    clearCart: () => Store.set('cart', []),
-    getTotals: () => {
+
+    updateCartBadge: () => {
         const cart = Store.getCart();
-        return cart.reduce((acc, item) => {
-            acc.basePrice += item.price;
-            acc.totalMargin += item.margin;
-            acc.customerPays += (item.price + item.margin);
-            return acc;
-        }, { basePrice: 0, totalMargin: 0, customerPays: 0, count: cart.length });
+        const badge = document.getElementById('cart-badge');
+        if(badge) {
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            badge.innerText = totalItems;
+            badge.style.display = totalItems > 0 ? 'block' : 'none';
+        }
+    },
+
+    // --- BUY NOW SYSTEM (Temporary Storage) ---
+    setBuyNowItem: (product, size = null) => {
+        const buyNowData = { ...product, size, quantity: 1 };
+        localStorage.setItem('flipstore_buynow', JSON.stringify([buyNowData])); // Saved as array to match checkout loop
+    },
+
+    getBuyNowItem: () => JSON.parse(localStorage.getItem('flipstore_buynow')),
+
+    clearBuyNowItem: () => localStorage.removeItem('flipstore_buynow'),
+
+    // --- ORDER TRACKING ---
+    saveOrder: (orderData) => {
+        let orders = JSON.parse(localStorage.getItem('flipstore_orders')) || [];
+        orders.unshift(orderData); // Add new order at the top
+        localStorage.setItem('flipstore_orders', JSON.stringify(orders));
     }
 };
-
