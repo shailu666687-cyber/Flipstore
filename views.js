@@ -7,6 +7,98 @@ const Views = {
         PRODUCTS.forEach(p => html += Components.renderProductCard(p));
         return html += `</div></div>`;
     },
+    // views.js mein ye naye views add karein:
+
+    // =========================================
+    // AUTHENTICATION PAGES
+    // =========================================
+    renderLogin: () => {
+        return `
+        <div style="height: 100vh; background: var(--primary-color); display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px;">
+            <div style="background: white; width: 100%; max-width: 400px; padding: 30px 20px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">
+                <div style="text-align: center; margin-bottom: 25px;">
+                    <i class='bx bx-shopping-bag' style="font-size: 50px; color: var(--primary-color);"></i>
+                    <h2 style="color: var(--text-dark); margin-top: 10px;">FlipStore</h2>
+                    <p style="color: gray; font-size: 14px;">Login to your account</p>
+                </div>
+                <form id="login-form" style="display: flex; flex-direction: column; gap: 15px;">
+                    <input type="tel" id="login-phone" placeholder="Phone Number" required pattern="[0-9]{10}" class="form-input">
+                    <input type="password" id="login-password" placeholder="Password" required class="form-input">
+                    <button type="submit" class="btn-buy-now" style="width: 100%; padding: 12px; font-size: 16px; border-radius: 4px;">Login</button>
+                </form>
+                <p style="text-align: center; margin-top: 20px; font-size: 14px; color: var(--text-dark);">
+                    New here? <span onclick="window.location.hash='#signup'" style="color: var(--primary-color); font-weight: bold; cursor: pointer;">Create an account</span>
+                </p>
+            </div>
+        </div>`;
+    },
+
+    renderSignup: () => {
+        return `
+        <div style="height: 100vh; background: var(--primary-color); display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px;">
+            <div style="background: white; width: 100%; max-width: 400px; padding: 30px 20px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">
+                <div style="text-align: center; margin-bottom: 25px;">
+                    <h2 style="color: var(--text-dark);">Sign Up</h2>
+                    <p style="color: gray; font-size: 14px;">Join FlipStore today</p>
+                </div>
+                <form id="signup-form" style="display: flex; flex-direction: column; gap: 15px;">
+                    <input type="text" id="signup-name" placeholder="Full Name" required class="form-input">
+                    <input type="tel" id="signup-phone" placeholder="Phone Number" required pattern="[0-9]{10}" class="form-input">
+                    <input type="password" id="signup-password" placeholder="Create Password" required class="form-input">
+                    <button type="submit" class="btn-buy-now" style="width: 100%; padding: 12px; font-size: 16px; border-radius: 4px;">Sign Up</button>
+                </form>
+                <p style="text-align: center; margin-top: 20px; font-size: 14px; color: var(--text-dark);">
+                    Already have an account? <span onclick="window.location.hash='#login'" style="color: var(--primary-color); font-weight: bold; cursor: pointer;">Login here</span>
+                </p>
+            </div>
+        </div>`;
+    },
+
+    bindAuthEvents: () => {
+        if(document.getElementById('login-form')) {
+            document.getElementById('login-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const phone = document.getElementById('login-phone').value;
+                const pass = document.getElementById('login-password').value;
+                if(Store.login(phone, pass)) {
+                    Utils.showToast("Welcome back!", "success");
+                    window.location.hash = '#home';
+                } else {
+                    Utils.showToast("Invalid Phone or Password", "error");
+                }
+            });
+        }
+        if(document.getElementById('signup-form')) {
+            document.getElementById('signup-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const name = document.getElementById('signup-name').value;
+                const phone = document.getElementById('signup-phone').value;
+                const pass = document.getElementById('signup-password').value;
+                if(Store.signup(name, phone, pass)) {
+                    Utils.showToast("Account created successfully!", "success");
+                    window.location.hash = '#home';
+                } else {
+                    Utils.showToast("Phone number already registered", "error");
+                }
+            });
+        }
+    },
+
+    // Account render function ko update karein taaki user ka naam dikhe:
+    renderAccount: () => {
+        const user = Store.getUser() || { name: "Guest" };
+        return `
+        <div style="padding: 15px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; background:#fff; padding:15px; border-radius:8px; box-shadow:0 2px 5px rgba(0,0,0,0.05);">
+                <div><h2>Hey, ${user.name}!</h2><p style="color:gray; font-size:12px;">Explore your FlipStore features</p></div>
+                <i class='bx bx-user-circle' style="font-size:50px; color:#2874f0;"></i>
+            </div>
+            <div style="background:#fff; border-radius:8px; overflow:hidden; box-shadow:0 2px 5px rgba(0,0,0,0.05);">
+                <div class="menu-item" style="color:red;" onclick="Store.logout();"><i class='bx bx-log-out'></i> Logout</div>
+            </div>
+        </div>`;
+    }
+
 
     renderCategories: () => {
         let html = `<div style="padding: 15px;"><h2 style="margin-bottom: 20px;">All Categories</h2><div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">`;
