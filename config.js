@@ -1,7 +1,8 @@
 const CONFIG = {
-    APP_NAME: "ShopStore Reseller",
+    APP_NAME: "FlipStore",
     CURRENCY: "₹",
-    TELEGRAM_BOT_TOKEN: "7996956533:AAGRbrHJva3t0Pyfu7Met1ttg2w-974msb4", // Change this
-    TELEGRAM_CHAT_ID: "8450221415"      // Change this
+    TELEGRAM: {
+        BOT_TOKEN: "YOUR_TELEGRAM_BOT_TOKEN_HERE",
+        CHAT_ID: "YOUR_CHAT_ID_HERE"
+    }
 };
-
