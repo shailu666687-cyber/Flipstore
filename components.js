@@ -1,8 +1,11 @@
 const Components = {
     renderProductCard: (product) => {
+        const inWishlist = Store.getWishlist().includes(product.id);
+        const heartIcon = inWishlist ? "<i class='bx bxs-heart' style='color: #ff4343;'></i>" : "<i class='bx bx-heart'></i>";
+
         return `
         <div class="product-card">
-            <div class="wishlist-icon"><i class='bx bx-heart'></i></div>
+            <div class="wishlist-icon" onclick="Store.toggleWishlist('${product.id}')">${heartIcon}</div>
             <img src="${product.image}" alt="${product.name}" class="product-img">
             <div class="product-info">
                 <h3 class="product-title">${product.name}</h3>
@@ -23,16 +26,11 @@ const Components = {
 
     handleAction: (productId, actionType) => {
         const product = PRODUCTS.find(p => p.id === productId);
-        
-        if (product.requireSize) {
-            Components.openSizeModal(product, actionType);
-        } else {
-            Components.executeAction(product, null, actionType);
-        }
+        if (product.requireSize) Components.openSizeModal(product, actionType);
+        else Components.executeAction(product, null, actionType);
     },
 
     openSizeModal: (product, actionType) => {
-        // Create dynamic modal for size selection
         const modalHtml = `
             <div id="size-modal" class="modal-overlay">
                 <div class="modal-content slide-up">
@@ -43,14 +41,11 @@ const Components = {
                     <div class="size-options">
                         ${product.sizes.map(size => {
                             const isOOS = product.stock[size] === 0;
-                            const stockBadge = product.stock[size] > 0 && product.stock[size] <= 3 
-                                ? `<span class="few-left">Only ${product.stock[size]} left</span>` : '';
-                            
+                            const stockBadge = product.stock[size] > 0 && product.stock[size] <= 3 ? `<span class="few-left">Only ${product.stock[size]} left</span>` : '';
                             return `
                             <div class="size-box ${isOOS ? 'disabled' : ''}" 
                                  onclick="${isOOS ? '' : `Components.executeActionAndClose('${product.id}', '${size}', '${actionType}')`}">
-                                ${size}
-                                ${stockBadge}
+                                ${size} ${stockBadge}
                             </div>`;
                         }).join('')}
                     </div>
@@ -67,11 +62,9 @@ const Components = {
     },
 
     executeAction: (product, size, actionType) => {
-        if (actionType === 'cart') {
-            Store.addToCart(product, size);
-        } else if (actionType === 'buy') {
+        if (actionType === 'cart') Store.addToCart(product, size);
+        else if (actionType === 'buy') {
             Store.setBuyNowItem(product, size);
-            // Navigate to checkout with 'buyNow' mode
             window.location.hash = '#checkout?mode=buynow'; 
         }
     }
