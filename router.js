@@ -1,64 +1,49 @@
 const Router = {
-    currentRoute: 'home',
-    navigate: (route) => {
-        Router.currentRoute = route;
-        const root = document.getElementById('app-root');
-        
-        // Render Shell
-        root.innerHTML = Components.Header();
-        
-        // Render View
-        const viewContainer = document.createElement('div');
-        switch(route) {
-            case 'home': viewContainer.innerHTML = Views.Home(); break;
-            case 'cart': viewContainer.innerHTML = Views.Cart(); break;
-            case 'earnings': viewContainer.innerHTML = Views.Earnings(); break;
-            case 'profile': viewContainer.innerHTML = Views.Profile(); break;
-        }
-        root.appendChild(viewContainer);
-        
-        // Render Bottom Nav
-        root.innerHTML += Components.BottomNav(route);
-        window.scrollTo(0,0);
-    }
-};
-
-const Main = {
     init: () => {
-        Router.navigate('home');
+        // Jab bhi URL me hash change ho, page update karo
+        window.addEventListener('hashchange', Router.handleRoute);
     },
-    handleAddToCart: (id) => {
-        const p = DB.products.find(x => x.id === id);
-        if(Store.addToCart(p)) {
-            Utils.showToast("Added to Cart!");
-            Router.navigate(Router.currentRoute); // Refresh UI
-        } else {
-            Utils.showToast("Already in cart", "error");
+
+    handleRoute: () => {
+        const hash = window.location.hash || '#home';
+        const routerView = document.getElementById('router-view');
+        
+        // 1. Bottom Nav ka Active State Update karo
+        document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+        const activeNav = document.querySelector(`.nav-item[href="${hash.split('?')[0]}"]`);
+        if(activeNav) activeNav.classList.add('active');
+
+        // 2. Page Render Logic
+        if (hash === '#home') {
+            routerView.innerHTML = Views.renderHome();
+        } 
+        else if (hash === '#cart') {
+            routerView.innerHTML = Views.renderCart();
+        } 
+        else if (hash === '#account') {
+            routerView.innerHTML = Views.renderAccount();
+        } 
+        else if (hash === '#categories') {
+            routerView.innerHTML = `<div style="text-align:center; padding: 50px;"><i class='bx bx-grid-alt' style="font-size: 50px; color: var(--primary-color);"></i><h2>Categories</h2><p>Coming soon...</p></div>`;
+        } 
+        else if (hash.startsWith('#checkout')) {
+            // Checkout URL check karo: mode=buynow hai ya mode=cart
+            const urlParams = new URLSearchParams(hash.split('?')[1]);
+            const mode = urlParams.get('mode') || 'cart';
+            
+            routerView.innerHTML = Views.renderCheckout(mode);
+            
+            // Render hone ke baad Form submit events active karo
+            if(document.getElementById('checkout-form')){
+                // Calculate again for binding
+                let items = mode === 'buynow' ? Store.getBuyNowItem() : Store.getCart();
+                let subtotal = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+                let delivery = subtotal > 499 ? 0 : 40;
+                Views.bindCheckoutEvents(mode, items, subtotal + delivery, delivery);
+            }
         }
-    },
-    handleRemove: (id) => {
-        Store.removeFromCart(id);
-        Router.navigate('cart');
-    },
-    saveCustomer: () => {
-        Store.set('customer', {
-            name: document.getElementById('cName').value,
-            phone: document.getElementById('cPhone').value,
-            pin: document.getElementById('cPin').value,
-            address: document.getElementById('cAddr').value
-        });
-    },
-    saveProfile: (e) => {
-        e.preventDefault();
-        Store.set('user', {
-            name: document.getElementById('uName').value,
-            phone: document.getElementById('uPhone').value
-        });
-        Utils.showToast("Profile Saved!");
-        Router.navigate('home');
+
+        // Page load hone par screen ko top par scroll kardo
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 };
-
-// Ignite the App
-document.addEventListener('DOMContentLoaded', Main.init);
-
