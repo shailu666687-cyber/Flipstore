@@ -21,6 +21,38 @@ const Store = {
             badge.style.display = totalItems > 0 ? 'block' : 'none';
         }
     },
+    // store.js mein in naye functions ko add karein
+
+    // --- AUTHENTICATION SYSTEM ---
+    getUser: () => JSON.parse(localStorage.getItem('flipstore_user')),
+    
+    login: (phone, password) => {
+        const users = JSON.parse(localStorage.getItem('flipstore_users')) || [];
+        const user = users.find(u => u.phone === phone && u.password === password);
+        if (user) {
+            localStorage.setItem('flipstore_user', JSON.stringify(user));
+            return true;
+        }
+        return false;
+    },
+
+    signup: (name, phone, password) => {
+        const users = JSON.parse(localStorage.getItem('flipstore_users')) || [];
+        if (users.find(u => u.phone === phone)) return false; // Number already exists
+        
+        const newUser = { name, phone, password };
+        users.push(newUser);
+        localStorage.setItem('flipstore_users', JSON.stringify(users));
+        localStorage.setItem('flipstore_user', JSON.stringify(newUser)); // Auto login after signup
+        return true;
+    },
+
+    logout: () => {
+        localStorage.removeItem('flipstore_user');
+        window.location.hash = '#login';
+        Utils.showToast("Logged out successfully");
+    }
+
     setBuyNowItem: (product, size = null) => {
         localStorage.setItem('flipstore_buynow', JSON.stringify([{ ...product, size, quantity: 1 }]));
     },
