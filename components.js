@@ -1,45 +1,78 @@
 const Components = {
-    Header: () => `
-        <header class="bg-white sticky top-0 z-40 px-4 py-3 shadow-sm flex justify-between items-center">
-            <h1 class="font-black text-xl text-blue-600 italic tracking-tight">ShopStore</h1>
-            <div class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold border border-green-200" onclick="Router.navigate('earnings')">
-                <i class="fas fa-wallet"></i> ${Utils.formatMoney(Store.get('earnings', 0))}
-            </div>
-        </header>
-    `,
-    BottomNav: (activeRoute) => {
-        const count = Store.getCart().length;
-        const badge = count > 0 ? `<span class="absolute top-1 right-2 bg-red-500 text-white text-[8px] font-bold px-1.5 py-0.5 rounded-full">${count}</span>` : '';
-        
-        const navItem = (route, icon, label) => `
-            <button onclick="Router.navigate('${route}')" class="flex flex-col items-center gap-1 p-2 w-16 transition-colors ${activeRoute === route ? 'nav-active' : 'text-gray-400'} relative">
-                <i class="${icon} text-xl"></i><span class="text-[10px] font-medium">${label}</span>
-                ${route === 'cart' ? badge : ''}
-            </button>
-        `;
+    renderProductCard: (product) => {
         return `
-            <nav class="fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around items-center pb-2 pt-2 z-50 bottom-sheet">
-                ${navItem('home', 'fas fa-home', 'Home')}
-                ${navItem('earnings', 'fas fa-chart-line', 'Earnings')}
-                ${navItem('cart', 'fas fa-shopping-cart', 'Cart')}
-                ${navItem('profile', 'far fa-user', 'Profile')}
-            </nav>
-        `;
-    },
-    ProductCard: (p) => `
-        <div class="bg-white rounded-xl p-2 shadow-sm border border-gray-100 flex flex-col relative">
-            <div class="absolute top-2 left-0 bg-green-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-r">Margin: ${Utils.formatMoney(p.margin)}</div>
-            <div class="h-36 w-full bg-gray-50 rounded-lg flex items-center justify-center p-2 mb-2 relative"><img src="${p.image}" class="h-full object-contain mix-blend-multiply"></div>
-            <h3 class="text-xs text-gray-800 line-clamp-2 font-medium">${p.name}</h3>
-            <div class="flex items-center gap-1 mt-1 mb-2">
-                <span class="font-bold text-sm text-gray-900">${Utils.formatMoney(p.price)}</span>
-                <span class="text-[10px] text-gray-400 line-through">${Utils.formatMoney(p.mrp)}</span>
+        <div class="product-card">
+            <div class="wishlist-icon"><i class='bx bx-heart'></i></div>
+            <img src="${product.image}" alt="${product.name}" class="product-img">
+            <div class="product-info">
+                <h3 class="product-title">${product.name}</h3>
+                <div class="rating-badge">${product.rating} <i class='bx bxs-star'></i></div>
+                <div class="price-container">
+                    <span class="current-price">${CONFIG.CURRENCY}${product.price}</span>
+                    <span class="original-price">${CONFIG.CURRENCY}${product.originalPrice}</span>
+                    <span class="discount">${product.discount}% off</span>
+                </div>
             </div>
-            <div class="mt-auto grid grid-cols-2 gap-2">
-                <button onclick="Utils.shareWhatsApp('${p.id}')" class="bg-green-50 text-green-600 border border-green-200 py-1.5 rounded text-xs font-bold"><i class="fab fa-whatsapp"></i> Share</button>
-                <button onclick="Main.handleAddToCart('${p.id}')" class="bg-blue-50 text-blue-600 border border-blue-200 py-1.5 rounded text-xs font-bold">Add</button>
+            <div class="action-buttons">
+                <button class="btn-add-cart" onclick="Components.handleAction('${product.id}', 'cart')">Add to Cart</button>
+                <button class="btn-buy-now" onclick="Components.handleAction('${product.id}', 'buy')">Buy Now</button>
             </div>
         </div>
-    `
-};
+        `;
+    },
 
+    handleAction: (productId, actionType) => {
+        const product = PRODUCTS.find(p => p.id === productId);
+        
+        if (product.requireSize) {
+            Components.openSizeModal(product, actionType);
+        } else {
+            Components.executeAction(product, null, actionType);
+        }
+    },
+
+    openSizeModal: (product, actionType) => {
+        // Create dynamic modal for size selection
+        const modalHtml = `
+            <div id="size-modal" class="modal-overlay">
+                <div class="modal-content slide-up">
+                    <div class="modal-header">
+                        <h3>Select Size</h3>
+                        <i class='bx bx-x close-modal' onclick="document.getElementById('size-modal').remove()"></i>
+                    </div>
+                    <div class="size-options">
+                        ${product.sizes.map(size => {
+                            const isOOS = product.stock[size] === 0;
+                            const stockBadge = product.stock[size] > 0 && product.stock[size] <= 3 
+                                ? `<span class="few-left">Only ${product.stock[size]} left</span>` : '';
+                            
+                            return `
+                            <div class="size-box ${isOOS ? 'disabled' : ''}" 
+                                 onclick="${isOOS ? '' : `Components.executeActionAndClose('${product.id}', '${size}', '${actionType}')`}">
+                                ${size}
+                                ${stockBadge}
+                            </div>`;
+                        }).join('')}
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+    },
+
+    executeActionAndClose: (productId, size, actionType) => {
+        const product = PRODUCTS.find(p => p.id === productId);
+        document.getElementById('size-modal').remove();
+        Components.executeAction(product, size, actionType);
+    },
+
+    executeAction: (product, size, actionType) => {
+        if (actionType === 'cart') {
+            Store.addToCart(product, size);
+        } else if (actionType === 'buy') {
+            Store.setBuyNowItem(product, size);
+            // Navigate to checkout with 'buyNow' mode
+            window.location.hash = '#checkout?mode=buynow'; 
+        }
+    }
+};
